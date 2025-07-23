@@ -16,7 +16,7 @@ from typing import Any, Dict, Optional
 class TdJson:
     """A Python client for the Telegram API using TDLib."""
 
-    def __init__(self, api_id: int, api_hash: str):
+    def __init__(self, api_id: int, api_hash: str, tdjson_path: Optional[os.PathLike[str]] = None):
         """Initialize a Telegram client.
 
         Args:
@@ -25,6 +25,7 @@ class TdJson:
         """
         self.api_id = api_id
         self.api_hash = api_hash
+        self.tdjson_path = tdjson_path
         self._load_library()
         self._setup_functions()
         self._setup_logging()
@@ -32,7 +33,12 @@ class TdJson:
 
     def _load_library(self) -> None:
         """Load the TDLib shared library."""
+
         tdjson_path = find_library("tdjson")
+
+        if self.tdjson_path:
+            tdjson_path = self.tdjson_path
+
         if tdjson_path is None:
             if os.name == "nt":
                 tdjson_path = os.path.join(os.path.dirname(__file__), "tdjson.dll")

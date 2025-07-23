@@ -1,5 +1,5 @@
 [project]
-name = "tdjson"
+name = "simpletd"
 version = "0.1.0"
 description = "Simplest tdjson client with some improovements"
 readme = "README.md"
@@ -8,9 +8,6 @@ authors = [
 ]
 requires-python = ">=3.9"
 dependencies = []
-
-[project.scripts]
-tdjson = "tdjson:main"
 
 [build-system]
 requires = ["hatchling"]
