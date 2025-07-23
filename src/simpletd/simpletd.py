@@ -16,7 +16,7 @@ from typing import Any, Dict, Optional
 class TdJson:
     """A Python client for the Telegram API using TDLib."""
 
-    def __init__(self, api_id: int, api_hash: str, tdjson_path: Optional[os.PathLike[str]] = None):
+    def __init__(self, api_id: int, api_hash: str, tdjson_path: Optional[str] = None):
         """Initialize a Telegram client.
 
         Args:
