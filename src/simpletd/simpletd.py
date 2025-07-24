@@ -11,6 +11,7 @@ import sys
 from ctypes import CDLL, CFUNCTYPE, c_char_p, c_double, c_int
 from ctypes.util import find_library
 from typing import Any, Dict, Optional
+from logging import getLogger
 
 
 class TdJson:
@@ -30,6 +31,7 @@ class TdJson:
         self._setup_functions()
         self._setup_logging()
         self.client_id = self._td_create_client_id()
+        self.logger = getLogger("simpletd")
 
     def _load_library(self) -> None:
         """Load the TDLib shared library."""
@@ -114,6 +116,9 @@ class TdJson:
         query_json = json.dumps(query).encode("utf-8")
         result = self._td_execute(query_json)
         if result:
+            if result["@type"] == "error":
+                self.logger.error(json.dumps(query))
+        
             return json.loads(result.decode("utf-8"))
         return None
 
@@ -128,7 +133,12 @@ class TdJson:
         query_json = json.dumps(query).encode("utf-8")
         self._td_send(self.client_id, query_json)
 
-        return self.wait(query["@extra"]["id"])
+        response = self.wait(query["@extra"]["id"])
+
+        if response["@type"] == "error":
+            self.logger.error(json.dumps(query))
+        
+        return response
 
     def send(self, query: Dict[str, Any]):
         """Send an asynchronous request to TDLib.
