@@ -119,7 +119,7 @@ class TdJson:
             return json.loads(result.decode("utf-8"))
         return None
 
-    def invoke(self, query: Dict[str, Any]):
+    def invoke(self, query: Dict[str, Any], timeout: int | None = None):
         """Send an request to TDLib and receive answer.
 
         Args:
@@ -130,7 +130,7 @@ class TdJson:
         query_json = json.dumps(query).encode("utf-8")
         self._td_send(self.client_id, query_json)
 
-        response = self.wait(query["@extra"]["id"])
+        response = self.wait(query["@extra"]["id"], timeout)
 
         if response["@type"] == "error":
             self.logger.error(json.dumps(response))
