@@ -116,9 +116,6 @@ class TdJson:
         query_json = json.dumps(query).encode("utf-8")
         result = self._td_execute(query_json)
         if result:
-            if result["@type"] == "error":
-                self.logger.error(json.dumps(query))
-        
             return json.loads(result.decode("utf-8"))
         return None
 
@@ -137,7 +134,7 @@ class TdJson:
 
         if response["@type"] == "error":
             self.logger.error(json.dumps(query))
-        
+
         return response
 
     def send(self, query: Dict[str, Any]):
