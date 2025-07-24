@@ -133,7 +133,7 @@ class TdJson:
         response = self.wait(query["@extra"]["id"])
 
         if response["@type"] == "error":
-            self.logger.error(json.dumps(query))
+            self.logger.error(json.dumps(response))
 
         return response
 
