@@ -5,14 +5,14 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 import binascii
-import json
-import os
-import sys
 from ctypes import CDLL, CFUNCTYPE, c_char_p, c_double, c_int
 from ctypes.util import find_library
-from typing import Any, Dict, Optional
+import json
 from logging import getLogger
-
+import os
+import sys
+import time
+from typing import Any, Dict, Optional
 
 class TdJson:
     """A Python client for the Telegram API using TDLib."""
@@ -281,9 +281,14 @@ class TdJson:
                     print("Authorization complete! You are now logged in.")
                     return
 
-    def wait(self, extra: str):
+    def wait(self, extra: str, timeout: int | None = None):
         "Wait for update with specified id"
+        start_time = time.time()
         while True:
+            if not (timeout is None) and  timeout > 0:
+                if time.time() - start_time:
+                    raise TimeoutError
+
             event = self.receive()
 
             if event and event.get("@extra") and event["@extra"]["id"] == extra:
